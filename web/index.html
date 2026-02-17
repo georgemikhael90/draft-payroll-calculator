@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SAD Pay Calculator - Local HTML</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body data-theme="white">
+  <main class="container">
+    <header class="hero">
+      <img src="../attached_assets/NEW LOGO SMALL.png" alt="SAD Pay Calculator Logo" class="logo" />
+      <h1>SAD Pay Calculator</h1>
+      <div class="theme-wrap">
+        <label for="theme_mode">Theme Mode</label>
+        <select id="theme_mode">
+          <option value="white">White Mode</option>
+          <option value="night">Night Mode</option>
+          <option value="navy">Navy Blue Mode</option>
+          <option value="navy_dark">Dark Navy Blue Mode</option>
+          <option value="grey">Grey Mode</option>
+          <option value="cream">Cream Mode</option>
+        </select>
+      </div>
+    </header>
+
+    <nav class="tabs" role="tablist" aria-label="Payroll tabs">
+      <button class="tab active" data-tab="pay_tab" role="tab" aria-selected="true">Pay Calculator</button>
+      <button class="tab" data-tab="correction_tab" role="tab" aria-selected="false">Pay Correction</button>
+    </nav>
+
+    <section id="pay_tab" class="tab-panel active" role="tabpanel">
+      <section class="panel">
+        <h2>Service Member Information</h2>
+        <div class="grid two">
+          <label>Service Member Name<input id="sm_name" type="text" /></label>
+          <label>DOD ID<input id="sm_dodid" type="text" /></label>
+          <label>Task Force<input id="sm_task_force" type="text" /></label>
+          <label>Company<input id="sm_company" type="text" /></label>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2>Pay Inputs</h2>
+        <div class="grid two">
+          <label>Service Category
+            <select id="service_category"></select>
+          </label>
+          <label>Military Grade
+            <select id="military_grade"></select>
+          </label>
+          <label>Years of Service
+            <input id="years_of_service" type="number" min="0" max="40" value="0" />
+          </label>
+          <label>Start Date
+            <input id="start_date" type="date" />
+          </label>
+          <label>End Date
+            <input id="end_date" type="date" />
+          </label>
+          <label class="check"><input id="has_dependents" type="checkbox" /><span>With Dependents</span></label>
+        </div>
+
+        <h3>Special Duty Pay</h3>
+        <div class="grid four" id="special_duty_block">
+          <label class="check"><input id="hazardous_duty" type="checkbox" /><span>Completed 365 Days of Hazardous Duty</span></label>
+          <label class="check"><input id="hardship_duty" type="checkbox" /><span>Eligible for Hardship Duty Pay</span></label>
+          <label class="check"><input id="at_border" type="checkbox" /><span>Located at Border</span></label>
+          <label class="check"><input id="present_this_month" type="checkbox" /><span>Present for Duty This Month</span></label>
+        </div>
+
+        <div class="actions">
+          <button id="calculate_btn" class="primary">Calculate Pay</button>
+          <button id="export_pay_pdf" class="secondary" disabled>Export Pay PDF</button>
+          <button id="export_pay_excel" class="secondary" disabled>Export Pay Excel</button>
+        </div>
+        <p id="pay_error" class="error"></p>
+      </section>
+
+      <section class="panel" id="summary_panel" hidden>
+        <h2>Pay Calculation</h2>
+        <div id="daily_metrics" class="grid five"></div>
+        <h2>Total Compensation</h2>
+        <div class="total" id="grand_total"></div>
+        <div class="sub" id="total_days"></div>
+        <h2>Monthly Breakdown</h2>
+        <div id="monthly_breakdown" class="monthly"></div>
+      </section>
+    </section>
+
+    <section id="correction_tab" class="tab-panel" role="tabpanel" hidden>
+      <section class="panel">
+        <h2>Pay Correction Calculator</h2>
+        <p>Compare original pay details against corrected values and export the difference report.</p>
+        <div class="split-head">
+          <h3>Original Pay Details</h3>
+          <h3>Correct Pay Details</h3>
+        </div>
+
+        <div class="grid two split-cols">
+          <div class="card" id="orig_block">
+            <div class="grid two">
+              <label>Service Category<select id="o_service_category"></select></label>
+              <label>Military Grade<select id="o_military_grade"></select></label>
+              <label>Years of Service<input id="o_years_of_service" type="number" min="0" max="40" value="0" /></label>
+              <label>Start Date<input id="o_start_date" type="date" /></label>
+              <label>End Date<input id="o_end_date" type="date" /></label>
+              <label class="check"><input id="o_has_dependents" type="checkbox" /><span>With Dependents</span></label>
+            </div>
+            <div class="grid two" id="o_special_block">
+              <label class="check"><input id="o_hazardous_duty" type="checkbox" /><span>Hazardous Duty</span></label>
+              <label class="check"><input id="o_hardship_duty" type="checkbox" /><span>Hardship Duty</span></label>
+              <label class="check"><input id="o_at_border" type="checkbox" /><span>At Border</span></label>
+              <label class="check"><input id="o_present_this_month" type="checkbox" /><span>Present This Month</span></label>
+            </div>
+          </div>
+
+          <div class="card" id="corr_block">
+            <div class="grid two">
+              <label>Service Category<select id="c_service_category"></select></label>
+              <label>Military Grade<select id="c_military_grade"></select></label>
+              <label>Years of Service<input id="c_years_of_service" type="number" min="0" max="40" value="0" /></label>
+              <label>Start Date<input id="c_start_date" type="date" /></label>
+              <label>End Date<input id="c_end_date" type="date" /></label>
+              <label class="check"><input id="c_has_dependents" type="checkbox" /><span>With Dependents</span></label>
+            </div>
+            <div class="grid two" id="c_special_block">
+              <label class="check"><input id="c_hazardous_duty" type="checkbox" /><span>Hazardous Duty</span></label>
+              <label class="check"><input id="c_hardship_duty" type="checkbox" /><span>Hardship Duty</span></label>
+              <label class="check"><input id="c_at_border" type="checkbox" /><span>At Border</span></label>
+              <label class="check"><input id="c_present_this_month" type="checkbox" /><span>Present This Month</span></label>
+            </div>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button id="compare_btn" class="primary">Compare Calculations</button>
+          <button id="export_corr_pdf" class="secondary" disabled>Export Correction PDF</button>
+          <button id="export_corr_excel" class="secondary" disabled>Export Correction Excel</button>
+        </div>
+        <p id="corr_error" class="error"></p>
+      </section>
+
+      <section class="panel" id="correction_results" hidden>
+        <h2>Correction Summary</h2>
+        <div class="grid three" id="correction_metrics"></div>
+        <div id="correction_status" class="status"></div>
+        <h2>Monthly Difference Breakdown</h2>
+        <div id="correction_monthly" class="monthly"></div>
+      </section>
+    </section>
+  </main>
+  <footer class="footer-credit">
+    <div>Local HTML version with payroll correction and exports</div>
+    <div>Developed by "George Mikhael"</div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.2/dist/jspdf.plugin.autotable.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <script src="data.js"></script>
+  <script src="calculator-core.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

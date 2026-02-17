@@ -1,0 +1,10 @@
+# Ignore exported/saved report artifacts
+*.pdf
+*.xlsx
+
+# Python and local runtime artifacts
+__pycache__/
+*.pyc
+local/
+local1/
+*.zip
